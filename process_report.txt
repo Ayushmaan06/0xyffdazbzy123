@@ -1,0 +1,6 @@
+    PID COMMAND         %MEM
+    290 python3.10       5.3
+    155 snapd            2.1
+    430 python3          2.0
+    228 unattended-upgr  1.1
+ 103085 packagekitd      1.0
