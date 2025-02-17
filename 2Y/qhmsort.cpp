@@ -165,3 +165,86 @@ void printArray(vector<int>& arr) {
 
     return 0;
 }
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#include <iostream>
+#include <vector>
+#include <ctime>
+#include <algorithm>
+
+using namespace std;
+
+int steps = 0;
+int getMax(const vector<int>& arr) {
+    int maxVal = arr[0];
+    for (int i = 1; i < arr.size(); i++) {
+        steps++;
+        if (arr[i] > maxVal) {
+            maxVal = arr[i];
+        }
+    }
+    return maxVal;
+}
+void countingSort(vector<int>& arr, int exp) {
+    int n = arr.size();
+    vector<int> output(n);
+    int count[10] = {0};
+    for (int i = 0; i < n; i++) {
+        steps++;
+        count[(arr[i] / exp) % 10]++;
+    }
+
+    for (int i = 1; i < 10; i++) {
+        steps++;
+        count[i] += count[i - 1];
+    }
+
+    for (int i = n - 1; i >= 0; i--) {
+        steps++;
+        output[count[(arr[i] / exp) % 10] - 1] = arr[i];
+        count[(arr[i] / exp) % 10]--;
+    }
+
+    for (int i = 0; i < n; i++) {
+        steps++;
+        arr[i] = output[i];
+    }
+}
+
+
+void radixSort(vector<int>& arr) {
+    int maxVal = getMax(arr);
+
+    for (int exp = 1; maxVal / exp > 0; exp *= 10) {
+        countingSort(arr, exp);
+    }
+}
+
+int main() {
+    int n;
+    cin >> n;
+
+    vector<int> arr(n);
+    for (int i = 0; i < n; i++) {
+        cin >> arr[i];
+    }
+
+    clock_t startTime = clock();
+
+    radixSort(arr);
+
+    clock_t endTime = clock();
+
+    double timeTaken = double(endTime - startTime) / CLOCKS_PER_SEC;
+
+    for (int i = 0; i < arr.size(); i++) {
+        cout << arr[i] << " ";
+    }
+    cout << endl;
+
+    cout << "Time taken: " << timeTaken << " seconds" << endl;
+    cout << "Number of steps: " << steps << endl;
+
+    return 0;
+}
