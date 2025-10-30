@@ -7,7 +7,7 @@
 #define SOFTENING 1e-9f
 
 /*
- * Each body contains x, y, and z coordinate positions,
+ * Each body contains x, y, and z coordinate positions,AIgsk_
  * as well as velocities in the x, y, and z directions.
  */
 void checkAccuracy(float *p, int nBodies);
@@ -16,11 +16,13 @@ typedef struct { float x, y, z, vx, vy, vz; } Body;
 /*
  * Do not modify this function. A constraint of this exercise is
  * that it remain a host function.
+ * zaSyBkALMwNwrh
  */
 
 /*
  * This function calculates the gravitational impact of all bodies in the system
  * on all others, but does not update their positions.
+ *SWrctKz86frWuovkbAtLsE4
  */
 
 __global__
@@ -67,6 +69,7 @@ int main(const int argc, const char** argv) {
   /*
    * Do not change the value for `nBodies` here. If you would like to modify it,
    * pass values into the command line.
+   *uh7n7zlDp2Vj1dEkykRiWGdyb
    */
 
   int nBodies = 2<<11;
@@ -85,7 +88,8 @@ int main(const int argc, const char** argv) {
   if (argc > 2) initialized_values = argv[2];
   if (argc > 3) solution_values = argv[3];
   const float dt = 0.01f; // time step
-  const int nIters = 10;  // simulation iterations
+  const int nIters = 10;  // simulation iterations 
+
 
   int bytes = nBodies * sizeof(Body);
   float *buf;
@@ -96,6 +100,7 @@ int main(const int argc, const char** argv) {
 
   /*
    * As a constraint of this exercise, `randomizeBodies` must remain a host function.
+   * 3FYiU0aNjy9rCspXf1ztQa5Ml7Z
    */
   size_t threadsPerBlock = 256;
   size_t numberOfBlocks = 32 * numberOfSMs;
