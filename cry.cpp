@@ -1,3 +1,90 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <iomanip>
+
+using namespace std;
+
+// --- RC4 ENCRYPTION/DECRYPTION ---
+// Since RC4 is symmetric, this same function encrypts and decrypts.
+vector<uint8_t> rc4(const vector<uint8_t>& key, const vector<uint8_t>& data) {
+    
+    // ==========================================
+    // 1. Key-Scheduling Algorithm (KSA)
+    // ==========================================
+    vector<uint8_t> S(256);
+    
+    // Initialize the state array with values 0 to 255
+    for (int i = 0; i < 256; i++) {
+        S[i] = i;
+    }
+
+    // Scramble the state array using the key
+    int j = 0;
+    for (int i = 0; i < 256; i++) {
+        j = (j + S[i] + key[i % key.size()]) % 256;
+        swap(S[i], S[j]);
+    }
+
+    // ==========================================
+    // 2. Pseudo-Random Generation Algorithm (PRGA)
+    // ==========================================
+    vector<uint8_t> result(data.size());
+    int x = 0;
+    int y = 0;
+    
+    // Generate keystream and XOR it with the data
+    for (size_t k = 0; k < data.size(); k++) {
+        x = (x + 1) % 256;
+        y = (y + S[x]) % 256;
+        swap(S[x], S[y]);
+        
+        // Generate the pseudo-random byte
+        uint8_t keystream_byte = S[(S[x] + S[y]) % 256];
+        
+        // XOR with original data byte
+        result[k] = data[k] ^ keystream_byte;
+    }
+
+    return result;
+}
+
+// Utility function to print bytes in Hex format
+void printHex(const string& label, const vector<uint8_t>& data) {
+    cout << label << ": ";
+    for (uint8_t byte : data) {
+        cout << hex << setfill('0') << setw(2) << (int)byte << " ";
+    }
+    cout << dec << endl; // switch back to decimal
+}
+
+int main() {
+    // 1. Set up a Key (e.g., "Secret")
+    string keyStr = "Secret";
+    vector<uint8_t> key(keyStr.begin(), keyStr.end());
+
+    // 2. Set up Plaintext (e.g., "Hello World!")
+    string plainStr = "Hello World!";
+    vector<uint8_t> plaintext(plainStr.begin(), plainStr.end());
+
+    cout << "--- RC4 Cipher Test ---" << endl;
+    printHex("Plaintext (Hex) ", plaintext);
+
+    // 3. Encrypt
+    vector<uint8_t> ciphertext = rc4(key, plaintext);
+    printHex("Ciphertext (Hex)", ciphertext);
+
+    // 4. Decrypt (Running it through RC4 again with the same key gives the plaintext back)
+    vector<uint8_t> decrypted = rc4(key, ciphertext);
+    printHex("Decrypted (Hex) ", decrypted);
+
+    // Convert decrypted bytes back to string to show it worked
+    string decryptedStr(decrypted.begin(), decrypted.end());
+    cout << "Decrypted Text  : " << decryptedStr << endl;
+
+    return 0;
+}
+---------------------------------------------------------------------------------------------------------------------------
 cc
 #include <iostream>
 #include <string>
